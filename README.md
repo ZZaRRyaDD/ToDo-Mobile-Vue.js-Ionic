@@ -1,10 +1,12 @@
 # ToDo Application
 
 ## Install and run
+Before start install dependencies you should install Node.js version 19.7.0.
+
 For start project set your access token from mapbox for the card to work correctly in ```.env``` file and run:
 
 ```bash
-npm install -g @ionic/cli
+npm i -g @ionic/cli
 npm i
 ionic serve
 ```

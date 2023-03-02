@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
 import InProcessTodosView from "@/views/InProcessTodosView.vue";
 import IsDoneTodosView from "@/views/IsDoneTodosView.vue";
-import СurrenciesView from "@/views/СurrenciesView.vue";
+import CurrenciesView from "@/views/СurrenciesView.vue";
 import MapView from "@/views/MapView.vue";
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: "/",
     redirect: {name: "inProcess"},
@@ -23,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/currencies',
     name: "currencies",
-    component: СurrenciesView,
+    component: CurrenciesView,
   },
   {
     path: '/map',
