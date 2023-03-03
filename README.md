@@ -1,7 +1,16 @@
 # ToDo Application
 
 ## Install and run
-Before start install dependencies you should install Node.js version 19.7.0.
+Before start install dependencies you should install Node.js.
+For this you should run these commands:
+
+```bash
+sudo apt update
+sudo apt install npm
+npm cache clean -f
+npm install -g n
+sudo n stable
+```
 
 For start project set your access token from mapbox for the card to work correctly in ```.env``` file and run:
 
