@@ -37,17 +37,16 @@ import ListItems from "@/components/Item/ListItems.vue";
 import {onMounted, onUpdated, ref} from "vue";
 import firebaseService from "@/firebase-service";
 
-const todoList = []
 const isOpen = ref(false)
 const item = ref(null)
-const notDoneTodos = ref(todoList.filter(item => !item.isDone))
+const notDoneTodos = ref([])
 
 const navigation = useNavigation()
 navigation.title = "Не завершенные задачи"
 
 async function getTasks() {
   const todoList = await firebaseService().readAll("Tasks")
-  notDoneTodos.value = todoList.filter(item => !item.isDone).sort()
+  notDoneTodos.value = todoList.filter(item => !item.isDone)
 }
 
 onMounted(async () => {
@@ -66,8 +65,7 @@ async function changeItem(item) {
     const date = new Date()
     item.createdAt = date.toLocaleDateString()
     item.isDone = false
-    const data = await firebaseService().create('Tasks', item)
-    todoList.push(data)
+    await firebaseService().create('Tasks', item)
   }
   await getTasks()
 }
@@ -81,23 +79,12 @@ async function changeState(itemId) {
 
 async function deleteItem(itemId) {
   await firebaseService().remove('Tasks', itemId);
-  for (let i = 0; i < todoList.length; i++) {
-    if (todoList[i].id === itemId) {
-      todoList.splice(i, 1)
-      break
-    }
-  }
-  notDoneTodos.value = todoList.filter(item => item.isDone)
+  await getTasks();
 }
 
-function editItem(itemId=null) {
+async function editItem(itemId=null) {
   if (itemId !== null) {
-    for (let i = 0; i < todoList.length; i++) {
-      if (todoList[i].id === itemId) {
-        item.value = todoList[i]
-        break
-      }
-    }
+    item.value = await firebaseService().readById('Tasks', itemId)
   } else {
     item.value = {
       title: "",
