@@ -12,7 +12,7 @@ npm install -g n
 sudo n stable
 ```
 
-For start project set your access token from mapbox for the card to work correctly in ```.env``` file and run:
+For start project you shot set all variable from ```.env.example``` and move it in ```.env``` file and run:
 
 ```bash
 npm i -g @ionic/cli
