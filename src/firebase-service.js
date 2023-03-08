@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore, query, orderBy, doc, getDoc, getDocs, addDoc, collection, deleteDoc, updateDoc } from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -10,48 +10,46 @@ const firebaseConfig = {
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
     appId: process.env.APP_ID,
 };
-const db = firebase.initializeApp(firebaseConfig).firestore();
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
 
 export default () => {
-    const readOperation = async (collectionName) => {
-        const firebaseCollection = db.collection(collectionName);
-        const querySnapshot = await firebaseCollection.get();
-        const result = querySnapshot.docs.map((doc) => {
-            return {...doc.data()}
+    const readAll = async (collectionName) => {
+        const q = query(collection(db, collectionName), orderBy("title"))
+        return await getDocs(q).then(querySnapshot => {
+            const tasks = []
+            querySnapshot.forEach(doc => {
+                tasks.push({id: doc.id, ...doc.data()})
+            })
+            return tasks
         });
-        return result;
     };
-    const createOperation = async (collectionName, data) => {
-        const firebaseCollection = db.collection(collectionName);
-        const firebaseObject = await firebaseCollection.add(data);
-        console.log(firebaseObject);
-        return firebaseObject;
+    const readById = async (collectionName, id) => {
+        const querySnapshot = await getDoc(doc(collection(db, collectionName), id));
+        if (querySnapshot.exists()) {
+            const task = querySnapshot.data()
+            task.id = querySnapshot.id
+            return task
+        }
     }
-    const deleteOperation = async (collectionName, username) => {
-        const firebaseCollection = db.collection(collectionName);
-        const querySnapshot = await firebaseCollection.where('username', "==", username).get();
-        const result = querySnapshot.docs.map((doc) => {
-            return {...doc.data(), id: doc.id}
-        });
-        firebaseCollection.doc(`${result[0].id}`).delete();
+    const create = async (collectionName, data) => {
+        const querySnapshot = await addDoc(collection(db, collectionName), data);
+        const task = JSON.parse(JSON.stringify(data))
+        task.id = querySnapshot.id
+        return task
     }
-    const findIdForDoc = async (collectionName, username) => {
-        const firebaseCollection = db.collection(collectionName);
-        const querySnapshot = await firebaseCollection.where('username', "==", username).get();
-        const result = querySnapshot.docs.map((doc) => {
-            return {...doc.data(), id: doc.id}
-        });
-        return result[0];
+    const remove = async (collectionName, id) => {
+        await deleteDoc(doc(collection(db, collectionName), id));
     }
-    const updateOperation = async (collectionName, updatedData) => {
-        const firebaseCollection = db.collection(collectionName);
-        firebaseCollection.doc(updatedData.id).update(updatedData);
+    const update = async (collectionName, id, updatedData) => {
+        await updateDoc(doc(collection(db, collectionName), id), updatedData);
     }
     return {
-        readOperation,
-        createOperation,
-        deleteOperation,
-        findIdForDoc,
-        updateOperation
+        readAll,
+        readById,
+        remove,
+        create,
+        update,
     };
 };
