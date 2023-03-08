@@ -1,5 +1,5 @@
 <template>
-  <ion-page id="main-content">
+  <ion-page>
     <ion-content class="ion-padding-top">
       <div v-if="notDoneTodos.length">
         <ListItems
@@ -31,75 +31,60 @@
 <script setup>
 import { IonPage, IonFab, IonFabButton, IonIcon, IonContent } from '@ionic/vue';
 import { add } from 'ionicons/icons';
-import {useTodo} from "@/stores/todo.js";
 import {useNavigation} from "@/stores/navigation";
 import FormItem from "@/components/Item/FormItem.vue";
 import ListItems from "@/components/Item/ListItems.vue";
 import {onMounted, onUpdated, ref} from "vue";
+import firebaseService from "@/firebase-service";
 
-const todos = useTodo()
 const isOpen = ref(false)
 const item = ref(null)
-const notDoneTodos = ref(todos.todoList.filter(item => !item.isDone))
+const notDoneTodos = ref([])
 
 const navigation = useNavigation()
 navigation.title = "Не завершенные задачи"
 
-onMounted(() => {
-  notDoneTodos.value = todos.todoList.filter(item => !item.isDone)
+async function getTasks() {
+  const todoList = await firebaseService().readAll("Tasks")
+  notDoneTodos.value = todoList.filter(item => !item.isDone)
+}
+
+onMounted(async () => {
+  await getTasks()
 })
 
-onUpdated(() => {
-  notDoneTodos.value = todos.todoList.filter(item => !item.isDone)
+onUpdated(async () => {
+  await getTasks()
 })
 
-function changeItem(item) {
+async function changeItem(item) {
   isOpen.value = false
   if (item.id) {
-    for (let i = 0; i < todos.todoList.length; i++) {
-      if (todos.todoList[i].id === item.id) {
-        todos.todoList[i] = item
-        break
-      }
-    }
+    await firebaseService().update('Tasks', item.id, item)
   } else {
-    item.id = todos.todoList[todos.todoList.length - 1].id + 1
     const date = new Date()
     item.createdAt = date.toLocaleDateString()
     item.isDone = false
-    todos.todoList.push(item)
+    await firebaseService().create('Tasks', item)
   }
-  notDoneTodos.value = todos.todoList.filter(item => !item.isDone)
+  await getTasks()
 }
 
-function changeState(itemId) {
-  for (let i = 0; i < todos.todoList.length; i++) {
-    if (todos.todoList[i].id === itemId) {
-      todos.todoList[i].isDone = !todos.todoList[i].isDone
-      break
-    }
-  }
-  notDoneTodos.value = todos.todoList.filter(item => !item.isDone)
+async function changeState(itemId) {
+  let item = await firebaseService().readById('Tasks', itemId);
+  item.isDone = !item.isDone
+  await firebaseService().update('Tasks', item.id, item)
+  await getTasks()
 }
 
-function deleteItem(itemId) {
-  for (let i = 0; i < todos.todoList.length; i++) {
-    if (todos.todoList[i].id === itemId) {
-      todos.todoList.splice(i, 1)
-      break
-    }
-  }
-  notDoneTodos.value = todos.todoList.filter(item => !item.isDone)
+async function deleteItem(itemId) {
+  await firebaseService().remove('Tasks', itemId);
+  await getTasks();
 }
 
-function editItem(itemId=null) {
+async function editItem(itemId=null) {
   if (itemId !== null) {
-    for (let i = 0; i < todos.todoList.length; i++) {
-      if (todos.todoList[i].id === itemId) {
-        item.value = todos.todoList[i]
-        break
-      }
-    }
+    item.value = await firebaseService().readById('Tasks', itemId)
   } else {
     item.value = {
       title: "",
