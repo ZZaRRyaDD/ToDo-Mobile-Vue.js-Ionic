@@ -1,6 +1,9 @@
 <template>
   <ion-page>
     <ion-content class="ion-padding-top">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <div v-if="isDoneTodos.length">
         <ListItems
             :items="isDoneTodos"
@@ -24,12 +27,13 @@
 </template>
 
 <script setup>
-import { IonPage, IonContent } from '@ionic/vue';
+import {IonPage, IonContent, IonRefresher, IonRefresherContent} from '@ionic/vue';
 import {useNavigation} from "@/stores/navigation";
 import FormItem from "@/components/Item/FormItem.vue";
 import ListItems from "@/components/Item/ListItems.vue";
 import {ref, onMounted, onUpdated} from "vue";
 import firebaseService from "@/firebase-service";
+import {Network} from "@capacitor/network";
 
 const isOpen = ref(false)
 const item = ref(null)
@@ -42,6 +46,19 @@ async function getTasks() {
   const todoList = await firebaseService().readAll("Tasks")
   isDoneTodos.value = todoList.filter(item => item.isDone)
 }
+
+Network.addListener('networkStatusChange', async (status) => {
+  if (status.connected) {
+    await getTasks()
+  }
+});
+
+const handleRefresh = (event) => {
+  setTimeout(async () => {
+    await getTasks()
+    event.target.complete();
+  }, 2000);
+};
 
 onMounted(async () => {
   await getTasks()
@@ -71,7 +88,7 @@ async function deleteItem(itemId) {
   await getTasks()
 }
 
-async function editItem(itemId=null) {
+async function editItem(itemId = null) {
   if (itemId !== null) {
     item.value = await firebaseService().readById('Tasks', itemId)
   }
@@ -84,13 +101,13 @@ function closeModal() {
 </script>
 
 <style scoped>
-ion-content {
-  --padding-top: 40px;
+* {
+  color: #000;
 }
 
-ion-fab-button {
-  --background: #E06C17;
-  --color: #000;
+ion-content {
+  --background: #FFF !important;
+  --padding-top: 40px;
 }
 
 .not-todos {
@@ -100,3 +117,4 @@ ion-fab-button {
   align-items: center;
 }
 </style>
+

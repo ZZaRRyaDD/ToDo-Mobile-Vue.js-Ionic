@@ -32,8 +32,23 @@
 </template>
 
 <script setup>
-import {IonCard, IonCardTitle, IonCardHeader, IonIcon, IonCardSubtitle, IonCardContent, IonRow, IonButton} from "@ionic/vue";
-import {informationCircleOutline, checkmarkDoneCircleOutline, createOutline, trashOutline, returnUpBackOutline} from 'ionicons/icons';
+import {
+  IonCard,
+  IonCardTitle,
+  IonCardHeader,
+  IonIcon,
+  IonCardSubtitle,
+  IonCardContent,
+  IonRow,
+  IonButton
+} from "@ionic/vue";
+import {
+  informationCircleOutline,
+  checkmarkDoneCircleOutline,
+  createOutline,
+  trashOutline,
+  returnUpBackOutline
+} from 'ionicons/icons';
 import {ref} from "vue";
 import {useRoute} from "vue-router";
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavigationMenu />
+    <NavigationMenu/>
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { IonHeader, IonToolbar, IonTitle, IonMenuButton, IonButtons } from '@ionic/vue';
+import {IonHeader, IonToolbar, IonTitle, IonMenuButton, IonButtons} from '@ionic/vue';
 import NavigationMenu from "@/components/NavigationMenu.vue";
 import {useNavigation} from "@/stores/navigation";
 

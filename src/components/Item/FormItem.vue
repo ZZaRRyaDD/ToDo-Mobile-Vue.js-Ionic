@@ -9,7 +9,8 @@
         </ion-item>
         <ion-item ref="descriptionInput" fill="outline" color="dark">
           <ion-label position="floating">Описание задачи</ion-label>
-          <ion-textarea @ionInput="validateDescription" :value="newItem.description" v-model="newItem.description"></ion-textarea>
+          <ion-textarea @ionInput="validateDescription" :value="newItem.description"
+                        v-model="newItem.description"></ion-textarea>
           <ion-note slot="error">Введите корректное описание задачи</ion-note>
         </ion-item>
       </ion-list>
@@ -18,7 +19,7 @@
           Отмена
         </ion-button>
         <ion-button @click="changeItem" size="large" fill="clear">
-          {{ newItem?.id ? "Обновить" : "Создать"}}
+          {{ newItem?.id ? "Обновить" : "Создать" }}
         </ion-button>
       </ion-row>
     </ion-col>
@@ -26,7 +27,18 @@
 </template>
 
 <script setup>
-import {IonNote, IonModal, IonItem, IonInput, IonTextarea, IonList, IonButton, IonRow, IonCol, IonLabel} from "@ionic/vue";
+import {
+  IonNote,
+  IonModal,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonList,
+  IonButton,
+  IonRow,
+  IonCol,
+  IonLabel
+} from "@ionic/vue";
 import {ref} from "vue";
 
 const props = defineProps({
@@ -102,7 +114,7 @@ ion-button {
   --background-focused: #000;
 }
 
-ion-item  {
+ion-item {
   margin-bottom: 15px;
 }
 

@@ -2,7 +2,7 @@
   <ion-page id="main-content">
     <ion-content class="ion-padding">
       <div v-for="currency of currencies" :key="currencies.indexOf(currency)">
-        {{ currency.currency }}: {{ currency.price}} {{ currency.currencyFinally }}
+        {{ currency.currency }}: {{ currency.price }} {{ currency.currencyFinally }}
       </div>
     </ion-content>
   </ion-page>
@@ -26,7 +26,12 @@ const currencies = ref([
 </script>
 
 <style scoped>
+* {
+  color: #000;
+}
+
 ion-content {
+  --background: #FFF;
   --padding-top: 70px;
 }
 </style>

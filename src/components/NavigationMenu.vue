@@ -41,8 +41,18 @@
 </template>
 
 <script setup>
-import {IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuToggle, IonList, IonItem, IonButton } from "@ionic/vue";
-import { useRouter } from 'vue-router';
+import {
+  IonMenu,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonMenuToggle,
+  IonList,
+  IonItem,
+  IonButton
+} from "@ionic/vue";
+import {useRouter} from 'vue-router';
 import {useNavigation} from "@/stores/navigation";
 
 const router = useRouter();
