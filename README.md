@@ -1,5 +1,18 @@
 # ToDo Application
 
+## Monetization Plan
+To monetize the application, you can connect ads or make the application itself paid, or both. 
+The app can be published on Google Play and RuStore.
+
+
+## User guide
+The application has four main pages, which are navigated using a menu that can be selected from the top left.
+- The Pending Tasks page displays information about pending tasks created by the user. The page contains a list of tasks, each of which has a menu for editing, deleting and completing.
+You can also create a new task on this page. By clicking on the button at the bottom right and entering the name of the task and its description, you can create a new task.
+- The Completed Tasks page displays information about completed tasks. The page contains a list of tasks, each of which has a menu for editing, deleting, and returning to an incomplete state.
+- The Map page displays a map with a label.
+- The "Currency rates" page displays information on the following currencies: Bitcoin, Ethereum, Dogecoin, Monero, USD, EUR.
+
 ## Install and run
 Before start install dependencies you should install Node.js.
 For this you should run these commands:
